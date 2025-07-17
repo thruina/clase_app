@@ -17,40 +17,68 @@ export default function TaskListScreen({ navigation }) {
     setTasks(prevTasks => [...prevTasks, task]);
   };
 
-  const totalTasks   = tasks.length;
+  const totalTasks = tasks.length;
   const pendingTasks = tasks.filter(t => !t.completed).length;
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.header}>
-        {appTitle} ({totalTasks})
-      </Text>
-      <Text style={styles.subheader}>
-        Pendientes: {pendingTasks}
-      </Text>
 
-      {/* Lista desplazable de tareas */}
-      <ScrollView style={styles.list}>
-        {tasks.map(task => (
-          <Text key={task.id} style={styles.taskItem}>
-            {task.title} {task.completed ? '✅' : '⌛️'}
-          </Text>
-        ))}
-      </ScrollView>
+  if (totalTasks === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.menssage}> No hay tareas disponibles</Text>
+        <Button
+          title="Crear nueva tarea"
+          onPress={() => navigation.navigate('AddTask', { addTask })}
+        />
+      </View>
+    )
+  }
 
-      {/* Botón para ir al formulario, pasando addTask */}
-      <Button
-        title="Crear nueva tarea"
-        onPress={() => navigation.navigate('AddTask', { addTask })}
-      />
-    </View>
-  );
+  else if (totalTasks < 3) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.menssage}> solo tienes unas pocas tareas</Text>
+        <Button
+          title="Crear nueva tarea"
+          onPress={() => navigation.navigate('AddTask', { addTask })}
+        />
+      </View>
+    )
+  }
+  else {
+    return (
+
+      <View style={styles.container}>
+        <Text style={styles.header}>
+          {appTitle} ({totalTasks})
+        </Text>
+        <Text style={styles.subheader}>
+          Pendientes: {pendingTasks}
+        </Text>
+
+        {/* Lista desplazable de tareas */}
+        <ScrollView style={styles.list}>
+          {tasks.map(task => (
+            <Text key={task.id} style={styles.taskItem}>
+              {task.title} {task.completed ? '✅' : '⌛️'}
+            </Text>
+          ))}
+        </ScrollView>
+
+        {/* Botón para ir al formulario, pasando addTask */}
+        <Button
+          title="Crear nueva tarea"
+          onPress={() => navigation.navigate('AddTask', { addTask })}
+        />
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+    header: { fontSize: 22, fontWeight: 'bold', marginBottom: 4 },
+    subheader: { fontSize: 16, marginBottom: 12 },
+    list: { flex: 1, marginBottom: 12 },
+    taskItem: { fontSize: 14, paddingVertical: 4 },
+    message: {fontSize: 18, marginBottom: 12}
+  });
 }
-
-const styles = StyleSheet.create({
-  container:  { flex: 1, padding: 16, backgroundColor: '#fff' },
-  header:     { fontSize: 22, fontWeight: 'bold', marginBottom: 4 },
-  subheader:  { fontSize: 16, marginBottom: 12 },
-  list:       { flex: 1, marginBottom: 12 },
-  taskItem:   { fontSize: 14, paddingVertical: 4 },
-});
